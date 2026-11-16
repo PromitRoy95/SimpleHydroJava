@@ -13,18 +13,21 @@ public class App extends PApplet {
     @Override
     public void settings() {
         // Canvas size must be set inside settings() when using standard Java
-        size(600, 400);
+        size(600, 400, P3D);
     }
 
     @Override
     public void setup() {
-        background(30);
+        background(0);
     }
 
     @Override
     public void draw() {
-        fill(0, 200, 255);
-        noStroke();
-        ellipse(mouseX, mouseY, 40, 40);
+        background(30);
+        lights();
+        translate(width / 2f, height / 2f, 0);
+        rotateX(frameCount * 0.01f);
+        rotateY(frameCount * 0.02f);
+        box(150);
     }
 }
