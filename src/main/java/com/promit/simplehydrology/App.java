@@ -1,8 +1,9 @@
 package com.promit.simplehydrology;
 
-import processing.core.PApplet;;
+import processing.core.PApplet;
+import processing.core.PShape;;
 /**
- * Hello world!
+ * PApplet is the sketch
  */
 public class App extends PApplet {
     public static void main(String[] args) {
@@ -16,9 +17,19 @@ public class App extends PApplet {
         size(600, 400, P3D);
     }
 
+    PShape mesh;
+
     @Override
     public void setup() {
-        background(0);
+        background(30);
+        mesh = createShape();
+        mesh.beginShape(TRIANGLES);
+        mesh.fill(100, 150, 255);
+        mesh.noStroke();
+        mesh.vertex(0, 0, 0);
+        mesh.vertex(100, 0, 0);
+        mesh.vertex(0, 100, 0);
+        mesh.endShape();
     }
 
     @Override
@@ -26,8 +37,7 @@ public class App extends PApplet {
         background(30);
         lights();
         translate(width / 2f, height / 2f, 0);
-        rotateX(frameCount * 0.01f);
-        rotateY(frameCount * 0.02f);
-        box(150);
+        rotateY(frameCount * 0.01f);
+        shape(mesh);
     }
 }
