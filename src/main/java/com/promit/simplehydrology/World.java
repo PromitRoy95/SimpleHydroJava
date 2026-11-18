@@ -1,11 +1,8 @@
 package com.promit.simplehydrology;
 
-import processing.core.PShape;
 import processing.core.PVector;
 
 public class World {
-    static PShape mesh;
-    static PVector[][] vertices;
 
     static int SEED;
 
@@ -51,7 +48,6 @@ public class World {
             4 5 7
             7 5 8
          */
-        vertices = new PVector[side][side];
     }
 
     // Update methods
@@ -64,9 +60,5 @@ public class World {
     // sediment cascade
     static void cascade(PVector pos) {
 
-    }
-
-    public static PShape getMesh() {
-        return mesh;
     }
 }
