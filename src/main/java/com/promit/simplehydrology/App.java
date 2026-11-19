@@ -75,12 +75,13 @@ public class App extends PApplet {
      */
     @Override
     public void setup() {
-        background(50);
+        background(139, 199, 252);
 
         mesh = createShape();
         World.generate(this, 128);
         vertices = new Model(128, 5);
         vertices.updateModel(World.heightMap);
+        mesh = createShape();
         updateMesh(vertices);
     
     }
@@ -88,18 +89,18 @@ public class App extends PApplet {
     @Override
     public void draw() {
 
-        background(50);
+        background(139, 199, 252);
         lights();
         ortho();
 
 
         //translate(width/2, height/2, 0);
-        translate(100, height/2 + 50, 0);
+        translate(100, height/2 + 100, 0);
 
         rotateX(PI / 4);
         rotateZ(-PI/4);
 
-        World.erode(100);
+        World.erode(1000);
         vertices.updateModel(World.heightMap);
         updateMesh(vertices);
         shape(mesh);

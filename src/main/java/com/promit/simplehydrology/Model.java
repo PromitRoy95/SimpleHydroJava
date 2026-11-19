@@ -5,6 +5,7 @@ import processing.core.PVector;
 // Helper class to store vertices
 public class Model {
     public PVector[][] vertices;
+    public int[][][][] colors;
 
     public Model(int sideCount, int sideLength){
         vertices = new PVector[sideCount][sideCount];
@@ -20,7 +21,7 @@ public class Model {
     public void updateModel(float[][] heightMap) {
         for(int i=0; i<heightMap.length; i++) {
             for(int j=0; j<heightMap[i].length; j++) {
-                vertices[i][j].z = 200 * heightMap[i][j];
+                vertices[i][j].z = 300 * heightMap[i][j];
             }
         }
     }

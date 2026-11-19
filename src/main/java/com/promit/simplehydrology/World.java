@@ -45,12 +45,13 @@ public class World {
         heightMap = new float[side][side];
         for(int i=0; i<side; i++) {
             for(int j = 0; j<side; j++) {
-                heightMap[i][j] = applet.noise(i*0.01f, j*0.01f) * 70;
+                heightMap[i][j] = applet.noise(i*0.01f, j*0.01f)*0.7f;
+                heightMap[i][j] += applet.noise(i*0.1f, j*0.1f)*0.3f;
+                //heightMap[i][j] = heightMap[i][j]/2;
             }
         }
         for(int i=0; i<side; i++) {
             for(int j = 0; j<side; j++) {
-                heightMap[i][j] += applet.noise(i*0.1f, j*0.1f) * 30;
                 if(heightMap[i][j]>max) 
                     max = heightMap[i][j];
                 if(heightMap[i][j]<min) 
@@ -58,11 +59,12 @@ public class World {
             }
         }
         //normalize
+        /*
         for(int i=0; i<side; i++) {
             for(int j = 0; j<side; j++) {
                 heightMap[i][j] = (heightMap[i][j] - min)/(max-min);
             }
-        }
+        }*/
     }
 
     static PVector surfaceNormal( int i, int j) {
