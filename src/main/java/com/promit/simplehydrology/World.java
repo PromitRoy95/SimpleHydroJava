@@ -1,5 +1,6 @@
 package com.promit.simplehydrology;
 
+import processing.core.PApplet;
 import processing.core.PVector;
 
 public class World {
@@ -7,9 +8,9 @@ public class World {
     static int SEED;
 
     //-- simulation state
-    float[][] heightMap;
-    float[][] streamMap;
-    float[][] poolMap;
+    static float[][] heightMap;
+    static float[][] streamMap;
+    static float[][] poolMap;
     //--
 
     // Parameters
@@ -28,26 +29,18 @@ public class World {
         y increases downwards, z increases towards the user
         
      */
-    // vertices means number of vertices on one side
-    public static void init(int side, int distance) {
-        /** Vertices
-         *  0----1----2
-            |  / |  / |
-            | /  | /  |
-            3----4----5
-            |  / |  / |
-            | /  | /  |
-            6----7----8
-
-            0 1 3
-            3 1 4
-            1 2 4
-            4 2 5
-            3 4 6
-            6 4 7
-            4 5 7
-            7 5 8
-         */
+    public static void init(PApplet applet, int side) {
+        heightMap = new float[side][side];
+        for(int i=0; i<side; i++) {
+            for(int j = 0; j<side; j++) {
+                heightMap[i][j] = applet.noise(i*0.1f, j*0.1f) * 100;
+            }
+        }
+        for(int i=0; i<side; i++) {
+            for(int j = 0; j<side; j++) {
+                heightMap[i][j] += applet.noise(i, j) * 10;
+            }
+        }
     }
 
     // Update methods
@@ -61,4 +54,5 @@ public class World {
     static void cascade(PVector pos) {
 
     }
+
 }

@@ -10,12 +10,31 @@ public class App extends PApplet {
     PShape mesh;
     Model vertices;
 
+    /** Vertices
+     *  0----1----2
+        |  / |  / |
+        | /  | /  |
+        3----4----5
+        |  / |  / |
+        | /  | /  |
+        6----7----8
+
+        0 1 3
+        3 1 4
+        1 2 4
+        4 2 5
+        3 4 6
+        6 4 7
+        4 5 7
+        7 5 8
+        */
     // update the mesh using the model
     public void updateMesh(Model m) {
         // update the vertices here
         mesh.beginShape(PConstants.TRIANGLES);
         mesh.fill(58, 219, 0);
-        mesh.stroke(255);
+        //mesh.stroke(255);
+        mesh.noStroke();
 
         for(int i=0; i<m.vertices.length-1; i++) {
             for(int j=0;j<m.vertices[i].length-1;j++) {
@@ -59,23 +78,11 @@ public class App extends PApplet {
         background(50);
 
         mesh = createShape();
+        World.init(this, 64);
         vertices = new Model(64, 10);
+        vertices.updateModel(World.heightMap);
         updateMesh(vertices);
-        
-        /* 
-        mesh.beginShape(TRIANGLES);
-        mesh.fill(58, 219, 0);
-        mesh.stroke(255);
-        mesh.vertex(-100, -100, 0);
-        mesh.vertex( 100, -100, 0);
-        mesh.vertex(-100, 100);
-
-        mesh.vertex( -100,  100, 0);
-        mesh.vertex(100,  -100, 0);
-        mesh.vertex(100,  100, 0);
-
-        mesh.endShape(CLOSE);
-        */
+    
     }
 
     @Override
@@ -87,7 +94,7 @@ public class App extends PApplet {
 
 
         //translate(width/2, height/2, 0);
-        translate(100, height/2, 0);
+        translate(100, height/2 + 50, 0);
 
         rotateX(PI / 4);
         rotateZ(-PI/4);
