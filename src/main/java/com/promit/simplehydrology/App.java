@@ -78,8 +78,8 @@ public class App extends PApplet {
         background(50);
 
         mesh = createShape();
-        World.generate(this, 64);
-        vertices = new Model(64, 10);
+        World.generate(this, 128);
+        vertices = new Model(128, 5);
         vertices.updateModel(World.heightMap);
         updateMesh(vertices);
     
@@ -98,6 +98,10 @@ public class App extends PApplet {
 
         rotateX(PI / 4);
         rotateZ(-PI/4);
+
+        World.erode(100);
+        vertices.updateModel(World.heightMap);
+        updateMesh(vertices);
         shape(mesh);
     }
 }

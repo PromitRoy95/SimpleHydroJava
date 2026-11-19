@@ -20,7 +20,7 @@ public class Model {
     public void updateModel(float[][] heightMap) {
         for(int i=0; i<heightMap.length; i++) {
             for(int j=0; j<heightMap[i].length; j++) {
-                vertices[i][j].z = heightMap[i][j];
+                vertices[i][j].z = 200 * heightMap[i][j];
             }
         }
     }

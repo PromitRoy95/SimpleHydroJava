@@ -1,25 +1,34 @@
 package com.promit.simplehydrology;
 
+import java.util.Random;
+
 import processing.core.PApplet;
 import processing.core.PVector;
 
 public class World {
 
     static int SEED;
-
-    static float scale = 60.0f;
+    static Random random = new Random();
+    static float scale = 30.0f;
 
     //-- simulation state
     static float[][] heightMap;
-    static float[][] streamMap;
-    static float[][] poolMap;
     //--
 
+    //Erosion Steps
+    boolean active = false;
+    int remaining = 200000;
+    int erosionstep = 1000;
+
     // Parameters
-    static float lrate = 0.1f;
-    static float dischargeThresh = 0.0f;
-    static float maxdiff = 0.01f;
-    static float settling = 0.8f;
+    static float dt = 1.2f;
+    static float density = 1.0f;
+    static float evapRate = 0.001f;
+    static float depositionRate = 0.1f;
+    static float minVol = 0.01f;
+    static float friction = 0.05f;
+
+
 
     static World w = new World();
 
@@ -32,20 +41,32 @@ public class World {
         
      */
     public static void generate(PApplet applet, int side) {
+        float min=0, max = 0;
         heightMap = new float[side][side];
         for(int i=0; i<side; i++) {
             for(int j = 0; j<side; j++) {
-                heightMap[i][j] = applet.noise(i*0.1f, j*0.1f) * 100;
+                heightMap[i][j] = applet.noise(i*0.01f, j*0.01f) * 70;
             }
         }
         for(int i=0; i<side; i++) {
             for(int j = 0; j<side; j++) {
-                heightMap[i][j] += applet.noise(i, j) * 10;
+                heightMap[i][j] += applet.noise(i*0.1f, j*0.1f) * 30;
+                if(heightMap[i][j]>max) 
+                    max = heightMap[i][j];
+                if(heightMap[i][j]<min) 
+                    min = heightMap[i][j];
+            }
+        }
+        //normalize
+        for(int i=0; i<side; i++) {
+            for(int j = 0; j<side; j++) {
+                heightMap[i][j] = (heightMap[i][j] - min)/(max-min);
             }
         }
     }
 
     static PVector surfaceNormal( int i, int j) {
+
         PVector n = new PVector(
             scale * (heightMap[i][j]-heightMap[i+1][j]),
             1.0f, 
@@ -99,7 +120,42 @@ public class World {
 
     static void erode(int cycles) {
         for(int i=0; i<cycles; i++) {
+            int posX = random.nextInt(128-2) + 1;
+            int posY = random.nextInt(128-2) + 1;
+            //spawn at random position
+            Particle drop = new Particle(new PVector(posX, posY));
+            while(drop.volume > minVol) {
+                int[] ipos = new int[2];
+                ipos[0] = (int)drop.pos.x;
+                ipos[1] = (int)drop.pos.y;
+
+                PVector n = surfaceNormal(ipos[0], ipos[1]);
+
+                // Accelerate particle using newtonian mechanics
+                drop.speed.add(new PVector(n.x, n.z).div(drop.volume*density).mult(dt));
+                drop.pos.add(PVector.mult(drop.speed, dt));
+                drop.speed = drop.speed.mult(1.0f - dt*friction);
+
+                if(drop.pos.x < 1 || drop.pos.y < 1 || drop.pos.x>=heightMap.length-1 || drop.pos.y>=heightMap[0].length-1) {
+                    break;
+                }
+
+                float maxsediment = drop.volume * drop.speed.mag()*
+                (heightMap[ipos[0]][ipos[1]]-heightMap[(int)drop.pos.x][(int)drop.pos.y]);
             
+                if(maxsediment < 0.0) maxsediment = 0.0f;
+
+                float sdiff = maxsediment - drop.sediment;
+                //System.out.println(sdiff);
+                // Act on the heightmap and droplet
+                drop.sediment += dt*depositionRate*sdiff;
+                heightMap[ipos[0]][ipos[1]] -= dt*drop.volume*depositionRate*sdiff;
+
+
+                //evaporate the droplet
+                drop.volume *= (1.0-dt*evapRate);
+
+            }
         }
     }
 }
