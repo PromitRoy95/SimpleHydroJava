@@ -78,7 +78,7 @@ public class App extends PApplet {
         background(50);
 
         mesh = createShape();
-        World.init(this, 64);
+        World.generate(this, 64);
         vertices = new Model(64, 10);
         vertices.updateModel(World.heightMap);
         updateMesh(vertices);
