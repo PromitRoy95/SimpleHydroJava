@@ -13,6 +13,8 @@ public class World {
 
     //-- simulation state
     static float[][] heightMap;
+    static VertexColor[][] colors;
+
     //--
 
     //Erosion Steps
@@ -22,7 +24,7 @@ public class World {
 
     // Parameters
     static float dt = 1.2f;
-    static float density = 1.0f;
+    static float density = 3.0f;
     static float evapRate = 0.001f;
     static float depositionRate = 0.1f;
     static float minVol = 0.01f;
@@ -43,11 +45,14 @@ public class World {
     public static void generate(PApplet applet, int side) {
         float min=0, max = 0;
         heightMap = new float[side][side];
+        colors = new VertexColor[side][side];
+
         for(int i=0; i<side; i++) {
             for(int j = 0; j<side; j++) {
-                heightMap[i][j] = applet.noise(i*0.01f, j*0.01f)*0.7f;
-                heightMap[i][j] += applet.noise(i*0.1f, j*0.1f)*0.3f;
-                //heightMap[i][j] = heightMap[i][j]/2;
+                heightMap[i][j] = applet.noise(i*0.01f, j*0.01f)*0.6f;
+                heightMap[i][j] += applet.noise(i*0.05f, j*0.05f)*0.4f;
+                colors[i][j] = new VertexColor(112, 91, 33);
+                //colors[i][j] = new VertexColor(94, 173, 49);
             }
         }
         for(int i=0; i<side; i++) {
@@ -152,7 +157,8 @@ public class World {
                 // Act on the heightmap and droplet
                 drop.sediment += dt*depositionRate*sdiff;
                 heightMap[ipos[0]][ipos[1]] -= dt*drop.volume*depositionRate*sdiff;
-
+                
+                colors[ipos[0]][ipos[1]] = new VertexColor(94, 173, 49);
 
                 //evaporate the droplet
                 drop.volume *= (1.0-dt*evapRate);

@@ -32,7 +32,7 @@ public class App extends PApplet {
     public void updateMesh(Model m) {
         // update the vertices here
         mesh.beginShape(PConstants.TRIANGLES);
-        mesh.fill(58, 219, 0);
+        //mesh.fill(58, 219, 0);
         //mesh.stroke(255);
         mesh.noStroke();
 
@@ -42,12 +42,23 @@ public class App extends PApplet {
                 // our two triangles are
                 // (i,j) , (i+1, j), (i, j+1)
                 // (i, j+1), (i+1, j), (i+1, j+1)
+
+                mesh.fill(World.colors[i][j].r, World.colors[i][j].g, World.colors[i][j].b);
                 mesh.vertex(m.vertices[i][j].x, m.vertices[i][j].y, m.vertices[i][j].z);
+
+                mesh.fill(World.colors[i][j].r, World.colors[i][j].g, World.colors[i][j].b);
                 mesh.vertex(m.vertices[i+1][j].x, m.vertices[i+1][j].y, m.vertices[i+1][j].z);
+
+                mesh.fill(World.colors[i][j].r, World.colors[i][j].g, World.colors[i][j].b);
+                mesh.vertex(m.vertices[i][j+1].x, m.vertices[i][j+1].y, m.vertices[i][j+1].z);
+                //--
+                mesh.fill(World.colors[i][j].r, World.colors[i][j].g, World.colors[i][j].b);
                 mesh.vertex(m.vertices[i][j+1].x, m.vertices[i][j+1].y, m.vertices[i][j+1].z);
 
-                mesh.vertex(m.vertices[i][j+1].x, m.vertices[i][j+1].y, m.vertices[i][j+1].z);
+                mesh.fill(World.colors[i][j].r, World.colors[i][j].g, World.colors[i][j].b);
                 mesh.vertex(m.vertices[i+1][j].x, m.vertices[i+1][j].y, m.vertices[i+1][j].z);
+
+                mesh.fill(World.colors[i][j].r, World.colors[i][j].g, World.colors[i][j].b);
                 mesh.vertex(m.vertices[i+1][j+1].x, m.vertices[i+1][j+1].y, m.vertices[i+1][j+1].z);
             }
         }
@@ -76,7 +87,7 @@ public class App extends PApplet {
     @Override
     public void setup() {
         background(139, 199, 252);
-
+        noiseSeed(351);
         mesh = createShape();
         World.generate(this, 128);
         vertices = new Model(128, 5);
@@ -95,14 +106,23 @@ public class App extends PApplet {
 
 
         //translate(width/2, height/2, 0);
-        translate(100, height/2 + 100, 0);
+        translate(100, height/2, 0);
 
-        rotateX(PI / 4);
+        rotateX(PI/4);
         rotateZ(-PI/4);
 
-        World.erode(1000);
+        World.erode(10000);
         vertices.updateModel(World.heightMap);
         updateMesh(vertices);
         shape(mesh);
+
+        hint(DISABLE_DEPTH_TEST);
+
+        camera(); // reset transforms
+        fill(0);
+        textSize(20);
+        text("Simple erosion model ", 10, 30);
+
+        hint(ENABLE_DEPTH_TEST);
     }
 }
