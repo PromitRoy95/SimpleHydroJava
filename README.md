@@ -4,7 +4,7 @@ A Java/Processing project that generates terrain and simulates its interaction w
 
 This project is inspired by the blog post: https://nickmcd.me/2020/04/10/simple-particle-based-hydraulic-erosion/
 
-![Generated terrain](resources/175423.png)
+![Generated terrain](images/115619.png)
 
 ## Features
 
